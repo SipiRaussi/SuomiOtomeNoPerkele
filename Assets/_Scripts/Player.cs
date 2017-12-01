@@ -26,7 +26,8 @@ public class Player : MonoBehaviour
     Vector3 velocity;
     float velocityXSmoothing;
 
-    Controller2D controller;
+    [HideInInspector]
+    public Controller2D controller;
 
     Vector2 directionalInput;
     bool wallSliding;
