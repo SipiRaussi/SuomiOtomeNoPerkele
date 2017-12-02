@@ -161,4 +161,10 @@ public class Player : MonoBehaviour
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
         velocity.y += gravity * Time.deltaTime;
     }
+
+    public void Push(Vector2 push)
+    {
+        velocity.x += push.x;
+        velocity.y += push.y;
+    }
 }

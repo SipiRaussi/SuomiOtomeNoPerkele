@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(Player))]
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : Creature
 {
-    public SpriteRenderer srenderer;
+    public Animator animator;
     Player player;
     public  float groundAcceleration,  airAcceleration;
     public  float groundDecceleration, airDecceleration;
@@ -13,11 +16,22 @@ public class PlayerInput : MonoBehaviour
     public  bool  attacking;
     public  float maxAttack;
     private float attackTime;
+    bool facingRight;
+    Vector2 hitBoxCenter, hitBoxSize;
+    bool gameOver;
+    float gameOverTimer;
 
     private CollisionInfo collisions;
 
-    void Start()
+    public override void Start()
     {
+        gameOver = false;
+        gameOverTimer = 0;
+
+        facingRight = true;
+        if (hp <= 0)
+            hp = 1;
+
         player = GetComponent<Player>();
         if (xSpeed <= 0)
             xSpeed = 0.01f;
@@ -33,24 +47,68 @@ public class PlayerInput : MonoBehaviour
 
         xCurrent = 0;
 
-        if (!srenderer)
+        if (!animator)
         {
-            srenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+            animator = transform.GetChild(0).GetComponent<Animator>();
         }
+
+        hitBoxSize = new Vector2(0.5f, 0.5f);
+
+        base.Start();
     }
 
-    void Update()
+    public override void Update()
     {
         AttackInput();
         MoveInput();
         HandleAnimation();
         collisions = player.controller.collisions;
+
+        if (gameOver)
+        {
+            gameOverTimer += Time.deltaTime;
+            if (gameOverTimer >= 5)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        base.Update();
+    }
+
+    void OnDrawGizmos()
+    {
+        if (attacking)
+        {
+            Gizmos.color = new Color(0, 1, 0, .5f);
+            Gizmos.DrawCube(hitBoxCenter, hitBoxSize);
+        }
     }
 
     void AttackInput()
     {
+        hitBoxCenter = new Vector2(transform.position.x, transform.position.y) +
+                     new Vector2(facingRight ? 0.15f : -0.15f, 0);
+
         if (attacking)
         {
+            AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
+            if (asi.IsName("attackground") || asi.IsName("attackair"))
+            {
+                List<RaycastHit2D> hits = Physics2D.BoxCastAll(hitBoxCenter, hitBoxSize, 0,
+                                          Vector2.zero, 0).ToList();
+
+                if (hits.Count > 0)
+                {
+                    foreach(RaycastHit2D hit in hits)
+                    {
+                        Creature c = hit.transform.gameObject.GetComponent<Creature>();
+                        if (c && c != this)
+                        {
+                            c.TakeDamage(1.0f);
+                        }
+                    }
+                }
+            }
+
             attackTime += Time.deltaTime;
             if (attackTime >= maxAttack)
             {
@@ -61,8 +119,10 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            if (Input.GetButtonDown("Attack"))
+            if (hp > 0 && Input.GetButtonDown("Attack"))
             {
+                animator.SetBool("airattack",   !collisions.below);
+                animator.SetBool("groundattack", collisions.below);
                 attacking = true;
             }
         }
@@ -71,8 +131,10 @@ public class PlayerInput : MonoBehaviour
     void MoveInput()
     {
         Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (hp <= 0)
+            directionalInput = Vector2.zero;
 
-        if (!attacking && directionalInput.x != 0)
+        if (directionalInput.x != 0)
         {
             if (directionalInput.x > 0)
             {
@@ -125,16 +187,18 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
+        if (xCurrent > 0)      facingRight = true;
+        else if (xCurrent < 0) facingRight = false;
         directionalInput.x = xCurrent;
         player.SetDirectionalInput(directionalInput);
 
-        if (!attacking)
+        if (!attacking && hp > 0)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetButtonDown("Jump"))
             {
                 player.OnJumpInputDown();
             }
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetButtonUp("Jump"))
             {
                 player.OnJumpInputUp();
             }
@@ -148,27 +212,63 @@ public class PlayerInput : MonoBehaviour
         else if (xCurrent < 0)
             srenderer.flipX = true;
 
-        if (collisions.below)
+        animator.SetBool("air", !collisions.below);
+        animator.SetBool("run", Mathf.Abs(xCurrent) > 0);
+        animator.SetBool("attack", attacking);
+
+        //if (collisions.below)
+        //{
+        //    if (attacking)
+        //    {
+        //        Debug.Log("Attack Grounded");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("Jotaki muuta ground");
+        //    }
+        //}
+        //else
+        //{
+        //    if (attacking)
+        //    {
+        //        Debug.Log("Attack Aerial");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("Jotaki muuta air");
+        //    }
+        //}
+    }
+
+    public override void StopAttack()
+    {
+        attacking  = false;
+        attackTime = 0;
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        if (invis > 0)
+            return;
+
+        player.Push(new Vector2(facingRight ? -3.34f : 3.34f, 4f));
+        StopAttack();
+        hp -= damage;
+
+        invis = invisTime;
+        if (hp <= 0)
         {
-            if (attacking)
-            {
-                Debug.Log("Attack Grounded");
-            }
-            else
-            {
-                Debug.Log("Jotaki muuta ground");
-            }
+            hue = Color.black;
+            srenderer.flipY = true;
+            Vector3 pos = transform.GetChild(0).transform.localPosition;
+            pos.y = 0.31f;
+            transform.GetChild(0).transform.localPosition = pos;
         }
-        else
-        {
-            if (attacking)
-            {
-                Debug.Log("Attack Aerial");
-            }
-            else
-            {
-                Debug.Log("Jotaki muuta air");
-            }
-        }
+    }
+
+    public void GameOver()
+    {
+        gameOver = true;
+        gameOverTimer = 0;
     }
 }
