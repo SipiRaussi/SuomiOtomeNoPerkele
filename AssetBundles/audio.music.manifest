@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 848979173
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2b3bd585f42552e72b660acfb2c34349
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c516f2a3b2b6b67ef759f6410a790acd
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+Assets:
+- Assets/Audio/Music/FinlandVania - MainTheme.ogg
+- Assets/Audio/Music/FinlandVania - MainTheme - Intro.ogg
+Dependencies: []
