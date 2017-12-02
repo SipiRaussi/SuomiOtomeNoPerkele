@@ -70,6 +70,11 @@ public class PlayerInput : Creature
             if (gameOverTimer >= 5)
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        else if (transform.position.y < -10)
+        {
+            TakeDamage(1000f);
+            GameOver();
+        }
 
         base.Update();
     }
@@ -215,29 +220,6 @@ public class PlayerInput : Creature
         animator.SetBool("air", !collisions.below);
         animator.SetBool("run", Mathf.Abs(xCurrent) > 0);
         animator.SetBool("attack", attacking);
-
-        //if (collisions.below)
-        //{
-        //    if (attacking)
-        //    {
-        //        Debug.Log("Attack Grounded");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("Jotaki muuta ground");
-        //    }
-        //}
-        //else
-        //{
-        //    if (attacking)
-        //    {
-        //        Debug.Log("Attack Aerial");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("Jotaki muuta air");
-        //    }
-        //}
     }
 
     public override void StopAttack()
@@ -258,6 +240,7 @@ public class PlayerInput : Creature
         invis = invisTime;
         if (hp <= 0)
         {
+            GameOver();
             hue = Color.black;
             srenderer.flipY = true;
             Vector3 pos = transform.GetChild(0).transform.localPosition;

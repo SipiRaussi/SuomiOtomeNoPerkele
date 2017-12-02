@@ -273,6 +273,7 @@ public class TwoHeaded : Creature
     {
         if (hp > 0)
         {
+            Debug.Log("Ei oo projectile attackia, takas idleen siitä :DDDD");
             AnimatorSetBools(false, true, false);
             state = TwoHeadedState.IdleFly;
         }
