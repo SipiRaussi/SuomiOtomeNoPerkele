@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 2534131803
+CRC: 1766821766
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: audio.music
+      Dependencies: {}
+    Info_1:
+      Name: sfx
       Dependencies: {}
