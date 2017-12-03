@@ -13,6 +13,7 @@ public enum TwoHeadedState
 
 public class TwoHeaded : Creature
 {
+    public Projectile projectile;
     public float   timeCounter, stateChangeTime = 3;
     public float   speed = 0;
     float          xSpeed;
@@ -41,6 +42,15 @@ public class TwoHeaded : Creature
     float deadTime;
 
     Vector2 deadVelocity;
+
+    float        projectileStart;
+    public float projectileStartTime = 5;
+    float        projectileShoot;
+    public float projectileShootTime = 0.5f;
+    public int   projectileShootMax  = 5;
+    int          projectileShootCount;
+    public float projectileDamage = 0.25f;
+    public float projectileSpeed  = 0.1f;
 
     // Use this for initialization
     public override void Start()
@@ -273,9 +283,68 @@ public class TwoHeaded : Creature
     {
         if (hp > 0)
         {
-            Debug.Log("Ei oo projectile attackia, takas idleen siitä :DDDD");
             AnimatorSetBools(false, true, false);
-            state = TwoHeadedState.IdleFly;
+
+            if (returnToSky)
+            {
+                Vector3 pos = transform.position;
+                pos.y += Time.deltaTime;
+
+                if (pos.y > skyY)
+                {
+                    state = TwoHeadedState.IdleFly;
+                    timeCounter = 0;
+                    startFlyAttack = 0;
+                    returnToSky = false;
+                }
+
+                transform.position = pos;
+            }
+            else
+            {
+                projectileStart += Time.deltaTime;
+                if (projectileStart >= projectileStartTime)
+                {
+                    projectileShoot += Time.deltaTime;
+
+                    float percent = projectileShoot / projectileShootTime;
+                    if (percent > 1) percent = 1;
+                    else if (percent < 0) percent = 0;
+
+                    hue = Color.Lerp(Color.white, Color.red, percent);
+
+                    if (projectileShoot >= projectileShootTime)
+                    {
+                        hue = Color.white;
+                        projectileShoot = 0;
+                        projectileShootCount++;
+
+                        Projectile proj = Instantiate(projectile, transform.position, Quaternion.identity);
+                        proj.Initialize(projectileDamage, directionToPlayer * projectileSpeed, 0.0f, false, true);
+
+                        if (projectileShootCount >= projectileShootMax)
+                        {
+                            returnToSky = true;
+                            timeCounter = 0;
+                            projectileShootCount = 0;
+                            projectileStart = 0;
+                            state = TwoHeadedState.IdleFly;
+                        }
+                    }
+                }
+                else
+                {
+                    float percent = projectileStart / projectileStartTime;
+                    if (percent > 1) percent = 1;
+                    else if (percent < 0) percent = 0;
+
+                    float multiplier = 1.0f - percent;
+                    Vector3 pos = transform.position;
+                    pos.y = pos.y + (amplitude * Mathf.Sin(amplitudeSpeed * Time.time)) * multiplier * 5;
+                    pos.x = pos.x + (amplitude * Mathf.Cos(amplitudeSpeed * Time.time)) * multiplier * 5;
+                    transform.position = pos;
+                }
+            }
         }
     }
 

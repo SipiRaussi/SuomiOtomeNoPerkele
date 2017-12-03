@@ -243,6 +243,8 @@ MonoBehaviour:
   invisTime: 0.5
   isPlayer: 0
   srenderer: {fileID: 0}
+  projectile: {fileID: 114948977558894724, guid: a9495fdbd78cc5941a41bf9a12fc6989,
+    type: 2}
   animator: {fileID: 0}
   groundAcceleration: 7
   airAcceleration: 10
@@ -251,7 +253,10 @@ MonoBehaviour:
   xSpeed: 0.6
   xCurrent: 0
   attacking: 0
+  projectileAttack: 0
   maxAttack: 1
+  projectileDamage: 0.2
+  projectileCooldown: 1.5
 --- !u!114 &394880828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,6 +607,8 @@ MonoBehaviour:
   invisTime: 0.4
   isPlayer: 0
   srenderer: {fileID: 0}
+  projectile: {fileID: 114253624010061368, guid: c1f0883000b94844a808971685cb7851,
+    type: 2}
   timeCounter: 0
   stateChangeTime: 2
   speed: 0.1
@@ -614,6 +621,11 @@ MonoBehaviour:
   directionToPlayer: {x: 0, y: 0}
   playerIsOnRightSide: 0
   skyY: 0.5
+  projectileStartTime: 5
+  projectileShootTime: 1
+  projectileShootMax: 5
+  projectileDamage: 0.25
+  projectileSpeed: 0.1
 --- !u!61 &605414138
 BoxCollider2D:
   m_ObjectHideFlags: 0

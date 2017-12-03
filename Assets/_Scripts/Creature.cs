@@ -65,7 +65,7 @@ public class Creature : MonoBehaviour
     {
         if (invis > 0)
             return;
-        Debug.Log("DIE IN ASS!, " + hp);
+
         invis = invisTime;
         StopAttack();
         hp -= damage;

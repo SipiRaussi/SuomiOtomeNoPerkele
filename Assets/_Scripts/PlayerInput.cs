@@ -7,6 +7,8 @@ using System.Linq;
 [RequireComponent(typeof(Player))]
 public class PlayerInput : Creature
 {
+    public Projectile projectile;
+
     public Animator animator;
     Player player;
     public  float groundAcceleration,  airAcceleration;
@@ -14,6 +16,7 @@ public class PlayerInput : Creature
     public  float xSpeed;
     public  float xCurrent;
     public  bool  attacking;
+    public  bool projectileAttack;
     public  float maxAttack;
     private float attackTime;
     bool facingRight;
@@ -21,12 +24,17 @@ public class PlayerInput : Creature
     bool gameOver;
     float gameOverTimer;
 
+    public float projectileDamage;
+    public float projectileCooldown;
+    float projectileTimer;
+
     private CollisionInfo collisions;
 
     public override void Start()
     {
         gameOver = false;
         gameOverTimer = 0;
+        projectileAttack = false;
 
         facingRight = true;
         if (hp <= 0)
@@ -90,6 +98,9 @@ public class PlayerInput : Creature
 
     void AttackInput()
     {
+        if (projectileTimer > 0)
+            projectileTimer -= Time.deltaTime;
+
         hitBoxCenter = new Vector2(transform.position.x, transform.position.y) +
                      new Vector2(facingRight ? 0.15f : -0.15f, 0);
 
@@ -98,17 +109,20 @@ public class PlayerInput : Creature
             AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
             if (asi.IsName("attackground") || asi.IsName("attackair"))
             {
-                List<RaycastHit2D> hits = Physics2D.BoxCastAll(hitBoxCenter, hitBoxSize, 0,
-                                          Vector2.zero, 0).ToList();
-
-                if (hits.Count > 0)
+                if (!projectileAttack)
                 {
-                    foreach(RaycastHit2D hit in hits)
+                    List<RaycastHit2D> hits = Physics2D.BoxCastAll(hitBoxCenter, hitBoxSize, 0,
+                          Vector2.zero, 0).ToList();
+
+                    if (hits.Count > 0)
                     {
-                        Creature c = hit.transform.gameObject.GetComponent<Creature>();
-                        if (c && c != this)
+                        foreach (RaycastHit2D hit in hits)
                         {
-                            c.TakeDamage(1.0f);
+                            Creature c = hit.transform.gameObject.GetComponent<Creature>();
+                            if (c && c != this)
+                            {
+                                c.TakeDamage(1.0f);
+                            }
                         }
                     }
                 }
@@ -124,11 +138,31 @@ public class PlayerInput : Creature
         }
         else
         {
-            if (hp > 0 && Input.GetButtonDown("Attack"))
+            if (hp > 0)
             {
-                animator.SetBool("airattack",   !collisions.below);
-                animator.SetBool("groundattack", collisions.below);
-                attacking = true;
+                if (Input.GetButtonDown("Attack"))
+                {
+                    animator.SetBool("airattack", !collisions.below);
+                    animator.SetBool("groundattack", collisions.below);
+                    attacking = true;
+                    projectileAttack = false;
+                }
+                else if (Input.GetButton("Projectile") && projectileTimer <= 0)
+                {
+                    projectileTimer = projectileCooldown;
+                    animator.SetBool("airattack", !collisions.below);
+                    animator.SetBool("groundattack", collisions.below);
+                    attacking = true;
+                    projectileAttack = true;
+
+                    if (projectile)
+                    {
+                        Projectile p = Instantiate(projectile, transform.position +
+                            (facingRight ? Vector3.right * 0.2f : Vector3.left * 0.2f), Quaternion.identity);
+
+                        p.Initialize(projectileDamage, facingRight ? Vector3.right * 0.1f : Vector3.left * 0.1f, 0.0f, true, false);
+                    }
+                }
             }
         }
     }
@@ -225,6 +259,7 @@ public class PlayerInput : Creature
     public override void StopAttack()
     {
         attacking  = false;
+        projectileAttack = false;
         attackTime = 0;
     }
 
