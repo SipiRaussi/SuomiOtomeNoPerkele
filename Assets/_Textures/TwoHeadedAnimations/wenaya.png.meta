@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e8b7b8565ec288740b74102ec51acb88
-timeCreated: 1512306610
+guid: f3cadbe39de786545877dd915204db3b
+timeCreated: 1512306649
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,10 @@ TextureImporter:
     21300002: wenaya spritesheet_1
     21300004: wenaya spritesheet_2
     21300006: wenaya spritesheet_3
+    21300008: wenaya_0
+    21300010: wenaya_1
+    21300012: wenaya_2
+    21300014: wenaya_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -130,54 +134,54 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wenaya spritesheet_0
+      name: wenaya_0
       rect:
         serializedVersion: 2
         x: 0
         y: 256
         width: 256
         height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wenaya spritesheet_1
+      name: wenaya_1
       rect:
         serializedVersion: 2
         x: 256
         y: 256
         width: 256
         height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wenaya spritesheet_2
+      name: wenaya_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 256
         height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wenaya spritesheet_3
+      name: wenaya_3
       rect:
         serializedVersion: 2
         x: 256
         y: 0
         width: 256
         height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -210,7 +210,7 @@ public class TwoHeaded : Creature
                 Vector3 pos = transform.position;
                 pos.y += Time.deltaTime;
 
-                if (pos.y > skyY)
+                if (pos.y >= skyY)
                 {
                     state          = TwoHeadedState.IdleFly;
                     timeCounter    = 0;
@@ -283,6 +283,7 @@ public class TwoHeaded : Creature
     {
         if (hp > 0)
         {
+            goRight = player.transform.position.x >= transform.position.x;
             AnimatorSetBools(false, true, false);
 
             if (returnToSky)

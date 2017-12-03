@@ -10,7 +10,8 @@ public class Projectile : Creature
     public Vector2 velocity;
     public float gravity;
     public bool canBeDestroyed;
- 
+
+    float life;
     Vector2 hitBoxSize;
 	// Use this for initialization
 	void Start ()
@@ -19,7 +20,7 @@ public class Projectile : Creature
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	public override void Update ()
     {
         Vector3 pos = transform.position;
         pos.x += velocity.x;
@@ -47,6 +48,10 @@ public class Projectile : Creature
                 }
             }
         }
+
+        life += Time.deltaTime;
+        if (life >= 15)
+            Destroy(gameObject);
     }
 
     public void Initialize(float dmg, Vector2 vel, float grav, bool player, bool destroy)
