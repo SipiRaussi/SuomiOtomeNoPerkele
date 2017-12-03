@@ -107,6 +107,7 @@ public class PlayerInput : Creature
         }
         else if (transform.position.x >= 65 && !twoheaded.activeInHierarchy)
         {
+            audioManager.PlayMusic(2);    
             twoheaded.SetActive(true);
         }
 

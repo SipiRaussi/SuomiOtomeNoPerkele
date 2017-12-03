@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         LoadMusic();
         LoadSFX();
-        PlayMusic();
+        PlayMusic(0);
     }
 
     private void LoadMusic()
@@ -52,17 +52,34 @@ public class AudioManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (audioSource.clip == mainTheme[0] && Time.time >= currentTime + mainTheme[0].length)
+        {
+            audioSource.clip = mainTheme[1];
+            audioSource.Play();
+            audioSource.loop = true;
+        }
+
         if (audioSource.clip == bossBattle[0] && Time.time >= currentTime + bossBattle[0].length)
         {
             audioSource.clip = bossBattle[1];
             audioSource.Play();
             audioSource.loop = true;
         }
+
+
     }
 
-    private void PlayMusic()
+    public void PlayMusic(int index)
     {
-        audioSource.clip = bossBattle[0];
+        switch (index)
+        {
+            case 0: audioSource.clip = mainTheme[0]; break;
+            case 1: audioSource.clip = mainTheme[1]; break;
+            case 2: audioSource.clip = bossBattle[0]; break;
+            case 3: audioSource.clip = bossBattle[1]; break;
+            default: audioSource.Stop(); return;
+        }
+        
         audioSource.Play();
         currentTime = Time.time;
     }
