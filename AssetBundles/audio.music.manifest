@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 848979173
+CRC: 370068826
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2b3bd585f42552e72b660acfb2c34349
+    Hash: 455a8edf0a21b87f3551e2c896dfaf61
   TypeTreeHash:
     serializedVersion: 2
     Hash: c516f2a3b2b6b67ef759f6410a790acd
@@ -12,6 +12,11 @@ ClassTypes:
 - Class: 83
   Script: {instanceID: 0}
 Assets:
+- Assets/Audio/Music/Title.ogg
 - Assets/Audio/Music/FinlandVania - MainTheme.ogg
 - Assets/Audio/Music/FinlandVania - MainTheme - Intro.ogg
+- Assets/Audio/Music/Bossi - Main.ogg
+- Assets/Audio/Music/Victory.ogg
+- Assets/Audio/Music/GameOver.ogg
+- Assets/Audio/Music/Bossi - Intro.ogg
 Dependencies: []

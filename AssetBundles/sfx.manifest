@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2549879736
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 51fe1cdd3c704745a0c1dc207d84cca9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c516f2a3b2b6b67ef759f6410a790acd
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+Assets:
+- Assets/Audio/Effects/Sqeeck!.ogg
+- Assets/Audio/Effects/Hit.ogg
+- Assets/Audio/Effects/Eagle.ogg
+- Assets/Audio/Effects/Explosion.ogg
+- Assets/Audio/Effects/Tsirp.ogg
+- Assets/Audio/Effects/Hit2.ogg
+Dependencies: []
