@@ -28,8 +28,8 @@ public class AudioManager : MonoBehaviour
         mainTheme[0] = music.LoadAsset<AudioClip>("FinlandVania - MainTheme - Intro");
         mainTheme[1] = music.LoadAsset<AudioClip>("FinlandVania - MainTheme");
         // Boss battle
-        bossBattle[0] = music.LoadAsset<AudioClip>("Boss - Intro");
-        bossBattle[1] = music.LoadAsset<AudioClip>("Boss - Main");
+        bossBattle[0] = music.LoadAsset<AudioClip>("Bossi - Intro");
+        bossBattle[1] = music.LoadAsset<AudioClip>("Bossi - Main");
         // Game Over
         gameOver = music.LoadAsset<AudioClip>("GameOver");
         // Victory
@@ -52,9 +52,9 @@ public class AudioManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (audioSource.clip == mainTheme[0] && Time.time >= currentTime + mainTheme[0].length)
+        if (audioSource.clip == bossBattle[0] && Time.time >= currentTime + bossBattle[0].length)
         {
-            audioSource.clip = mainTheme[1];
+            audioSource.clip = bossBattle[1];
             audioSource.Play();
             audioSource.loop = true;
         }
@@ -62,7 +62,7 @@ public class AudioManager : MonoBehaviour
 
     private void PlayMusic()
     {
-        audioSource.clip = mainTheme[0];
+        audioSource.clip = bossBattle[0];
         audioSource.Play();
         currentTime = Time.time;
     }
