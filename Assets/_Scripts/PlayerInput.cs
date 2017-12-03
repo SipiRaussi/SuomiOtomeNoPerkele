@@ -29,6 +29,8 @@ public class PlayerInput : Creature
     float projectileTimer;
 
     private CollisionInfo collisions;
+    public GameObject twoheaded;
+    public AudioManager audioManager;
 
     public override void Start()
     {
@@ -60,6 +62,26 @@ public class PlayerInput : Creature
             animator = transform.GetChild(0).GetComponent<Animator>();
         }
 
+        if (!twoheaded)
+        {
+            GameObject g = GameObject.FindWithTag("Enemy");
+            twoheaded = g;
+            if (twoheaded.activeInHierarchy)
+            {
+                twoheaded.SetActive(false);
+            }
+
+        }
+
+        if (!audioManager)
+        {
+            GameObject g = GameObject.FindWithTag("Audio");
+            if (g)
+            {
+                audioManager = g.GetComponent<AudioManager>();
+            }
+        }
+
         hitBoxSize = new Vector2(0.5f, 0.5f);
 
         base.Start();
@@ -82,6 +104,10 @@ public class PlayerInput : Creature
         {
             TakeDamage(1000f);
             GameOver();
+        }
+        else if (transform.position.x >= 65 && !twoheaded.activeInHierarchy)
+        {
+            twoheaded.SetActive(true);
         }
 
         base.Update();
